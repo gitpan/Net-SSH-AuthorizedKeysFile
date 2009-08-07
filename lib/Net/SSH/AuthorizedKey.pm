@@ -9,7 +9,7 @@ use strict;
 use warnings;
 use Log::Log4perl qw(:easy);
 
-our $VERSION = "0.02";
+our $VERSION = "0.04";
 
 our %VALID_KEYWORDS = (
     command               => "s",
@@ -148,7 +148,7 @@ sub as_string {
     my $string = $self->options_as_string();
     $string .= " " if length $string;
 
-    $string .= " $self->{encryption} $self->{key} $self->{email}";
+    $string .= "$self->{encryption} $self->{key} $self->{email}";
 
     return $string;
 }
