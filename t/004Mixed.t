@@ -20,6 +20,7 @@ my $cdir = "$tdir/canned";
 use Net::SSH::AuthorizedKeysFile;
 
 my $ak = Net::SSH::AuthorizedKeysFile->new(file => "$cdir/ak-mixed.txt");
+$ak->read();
 
 my @keys = $ak->keys();
 
@@ -33,6 +34,7 @@ $org_data =~ s/^\s*#.*\n//mg;
 is($ak->as_string(), $org_data, "write-back");
 
 $ak = Net::SSH::AuthorizedKeysFile->new(file => "$cdir/ak-ssh1-weirdo.txt");
+$ak->read();
 @keys = $ak->keys();
 is(scalar @keys, 1, "1 key found");
 is($keys[0]->email(), 'bozo@quack.schmack.com', "email4");

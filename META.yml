@@ -1,14 +1,25 @@
-# http://module-build.sourceforge.net/META-spec.html
-#XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
-name:         Net-SSH-AuthorizedKeysFile
-version:      0.05
-version_from: lib/Net/SSH/AuthorizedKeysFile.pm
-installdirs:  site
+--- #YAML:1.0
+name:               Net-SSH-AuthorizedKeysFile
+version:            0.06
+abstract:           Read and modify ssh's authorized_keys files
+author:
+    - Mike Schilli <m@perlmeister.com>
+license:            unknown
+distribution_type:  module
+configure_requires:
+    ExtUtils::MakeMaker:  0
+build_requires:
+    ExtUtils::MakeMaker:  0
 requires:
-    Class::Accessor:               0
-    Sysadm::Install:               0.2
-    Test::More:                    0
-    Text::ParseWords:              0
-
-distribution_type: module
-generated_by: ExtUtils::MakeMaker version 6.30_01
+    Class::Accessor:   0
+    Sysadm::Install:   0.2
+    Test::More:        0
+    Text::ParseWords:  0
+no_index:
+    directory:
+        - t
+        - inc
+generated_by:       ExtUtils::MakeMaker version 6.50
+meta-spec:
+    url:      http://module-build.sourceforge.net/META-spec-v1.4.html
+    version:  1.4
