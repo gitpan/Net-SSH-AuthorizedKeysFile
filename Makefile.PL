@@ -7,10 +7,11 @@ WriteMakefile(
     'NAME'         => 'Net::SSH::AuthorizedKeysFile',
     'VERSION_FROM' => 'lib/Net/SSH/AuthorizedKeysFile.pm', # finds $VERSION
     'PREREQ_PM'    => {
-        Sysadm::Install  => 0.20,
-        Text::ParseWords => 0,
         Test::More       => 0,
-        Class::Accessor  => 0,
+        Text::ParseWords => 0,
+        Log::Log4perl    => 1,
+        File::Temp       => 0,
+        File::Copy       => 0,
     }, # e.g., Module::Name => 1.1
     'EXE_FILES'    => [ 'eg/authorized-keys-test' ],
     ($] >= 5.005 ?    ## Add these new keywords supported since 5.005

@@ -5,8 +5,8 @@
 
 use warnings;
 use strict;
-use Sysadm::Install qw(:all);
 use File::Temp qw(tempfile);
+use File::Copy;
 
 #use Log::Log4perl qw(:easy);
 #Log::Log4perl->easy_init($DEBUG);
@@ -31,7 +31,7 @@ is($keys[1]->option('from'),
    '*.sales.example.net,!pc.sales.example.net', "from with comma");
 is($keys[1]->option('From'), 
    '*.sales.example.net,!pc.sales.example.net', "from case insensitive");
-is($keys[1]->comment(), 'john@example.net', "comment");
+is($keys[1]->email(), 'john@example.net', "comment");
 
 #command="dump /home",no-pty,no-port-forwarding ssh-dss AAAAC3...51R== example.net
 is($keys[2]->option('command'), 'dump /home', "options including blank");
@@ -53,7 +53,7 @@ is($keys[4]->email(), 'jane@example.net', "comment");
 my($fh, $filename) = tempfile();
 
     # Modify a authkey file
-cp "$cdir/ak-manpage.txt", $filename;
+copy "$cdir/ak-manpage.txt", $filename;
 my $ak2 = Net::SSH::AuthorizedKeysFile->new(file => $filename);
 $ak2->read();
 @keys = $ak2->keys();

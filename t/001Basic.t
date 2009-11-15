@@ -5,11 +5,11 @@
 
 use warnings;
 use strict;
-use Sysadm::Install qw(:all);
 use File::Temp qw(tempfile);
+use File::Copy;
 
 use Log::Log4perl qw(:easy);
-#Log::Log4perl->easy_init($DEBUG);
+# Log::Log4perl->easy_init($DEBUG);
 
 use Test::More tests => 11;
 BEGIN { use_ok('Net::SSH::AuthorizedKeysFile') };
@@ -37,7 +37,7 @@ like($keys[1]->key(), qr/^2\d+$/, "key");
 my($fh, $filename) = tempfile();
 
     # Modify a authkey file
-cp "$cdir/ak.txt", $filename;
+copy "$cdir/ak.txt", $filename;
 my $ak2 = Net::SSH::AuthorizedKeysFile->new(file => $filename);
 $ak2->read();
 @keys = $ak2->keys();
