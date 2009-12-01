@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Net-SSH-AuthorizedKeysFile
-version:            0.10
+version:            0.11
 abstract:           Read and modify ssh's authorized_keys files
 author:
     - Mike Schilli <m@perlmeister.com>
@@ -16,6 +16,8 @@ requires:
     Log::Log4perl:     1
     Test::More:        0
     Text::ParseWords:  0
+resources:
+    repository:  http://github.com/mschilli/net-ssh-authorizedkeysfile-perl
 no_index:
     directory:
         - t
