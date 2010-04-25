@@ -2,6 +2,14 @@
 Revision history for Perl extension Net::SSH::AuthorizedKeysFile
 ######################################################################
 
+0.13  (2010/04/25)
+    (ms) Moved ssh1 and ssh2 docs to base class.
+    (ms) Added sanity check for files with extreme line lengths
+    (ms) Added convenience methods path_locate() and ssh_dir() to locate 
+         a user's .ssh dir and authorized_keys file on disk.
+    (ms) Added fingerprint method to parser base class, determining
+         a key's functional uniqueness.
+
 0.12  (2010/02/22)
     (ms) Added test cases with weird keys
     (ms) Deleting undefined/empty options to avoid warnings
