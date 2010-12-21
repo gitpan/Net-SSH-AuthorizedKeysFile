@@ -8,7 +8,7 @@ use Text::ParseWords;
 use Digest::MD5 qw(md5_hex);
 
   # Accessors common for both ssh1 and ssh2 keys
-our @accessors = qw(options key type error email comment);
+our @accessors = qw(key type error email comment);
 __PACKAGE__->make_accessor( $_ ) for @accessors;
 
   # Some functions must be implemented in the subclass
@@ -42,7 +42,8 @@ sub new {
     my($class, %options) = @_;
 
     my $self = {
-        error => "(no error)",
+        error        => "(no error)",
+        option_order => [],
         %options,
     };
 
@@ -64,9 +65,20 @@ sub option_type_global {
 }
 
 ###########################################
+sub options {
+###########################################
+    my($self) = @_;
+
+    return {
+        map { $_ => $self->option( $_ ) } 
+            keys %{ $self->{ options } } 
+    };
+}
+
+###########################################
 sub option {
 ###########################################
-    my($self, $key, $value) = @_;
+    my($self, $key, $value, $append) = @_;
 
     $key = lc $key;
 
@@ -78,11 +90,33 @@ sub option {
     }
 
     if(defined $value) {
+
+        if( $append ) {
+            if( $self->{options}->{$key} and
+                ref($self->{options}->{$key}) ne "ARRAY" ) {
+                $self->{options}->{$key} = [ $self->{options}->{$key} ];
+            }
+        } else {
+            $self->option_delete( $key );
+        }
+
         if($option_type eq "s") {
-            $self->{options}->{$key} = $value;
+            if( $self->{options}->{$key} and
+                ref($self->{options}->{$key}) eq "ARRAY" ) {
+                DEBUG "Adding option $key to $value";
+                push @{ $self->{options}->{$key} }, $value;
+            } else {
+                DEBUG "Setting option $key to $value";
+                $self->{options}->{$key} = $value;
+            }
         } else {
             $self->{options}->{$key} = undef;
         }
+        push @{ $self->{option_order} }, $key;
+    }
+
+    if( "$option_type" eq "1" ) {
+        return exists $self->{options}->{$key};
     }
 
     return $self->{options}->{$key};
@@ -95,6 +129,9 @@ sub option_delete {
 
     $key = lc $key;
 
+    @{ $self->{option_order} } = 
+        grep { $_ ne $key } @{ $self->{option_order} };
+
     delete $self->{options}->{$key};
 }
 
@@ -106,7 +143,7 @@ sub options_as_string {
     my $string = "";
     my @parts  = ();
 
-    for my $option ( keys %{ $self->{options} } ) {
+    for my $option ( @{ $self->{option_order} } ) {
         if(defined $self->{options}->{$option}) {
             if(ref($self->{options}->{$option}) eq "ARRAY") {
                 for (@{ $self->{options}->{$option} }) {
@@ -170,7 +207,7 @@ sub parse {
     if(my $key = $class->key_read( $key_string ) ) {
           # We found a key with options
         $key->{options} = {};
-        $key->options_parse( $options_string, $key->{options} );
+        $key->options_parse( $options_string );
         DEBUG "Found ", $key->type(), " key: ", $key->as_string();
         return $key;
     }
@@ -183,7 +220,7 @@ sub parse {
 ###########################################
 sub options_parse {
 ###########################################
-    my($self, $string, $option_hash) = @_;
+    my($self, $string) = @_;
 
     DEBUG "Parsing options: [$string]";
     my @options = parse_line(qr/\s*,\s*/, 0, $string);
@@ -198,15 +235,7 @@ sub options_parse {
         $value = 1 unless defined $value;
         $value =~ s/^"(.*)"$/$1/; # remove quotes
 
-        if(exists $option_hash->{$key}) {
-            DEBUG "Option $key already set, adding [$value] to array";
-            $option_hash->{$key} = [ $option_hash->{$key} ] if 
-            ref($option_hash->{$key}) ne "ARRAY";
-            push @{ $option_hash->{$key} }, $value;
-        } else {
-            DEBUG "Setting option $key to $value";
-            $option_hash->{$key} = $value;
-        }
+        $self->option($key, $value, 1);
     }
 }
 

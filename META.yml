@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Net-SSH-AuthorizedKeysFile
-version:            0.13
+version:            0.14
 abstract:           Read and modify ssh's authorized_keys files
 author:
     - Mike Schilli <m@perlmeister.com>
@@ -24,7 +24,7 @@ no_index:
     directory:
         - t
         - inc
-generated_by:       ExtUtils::MakeMaker version 6.50
+generated_by:       ExtUtils::MakeMaker version 6.55_02
 meta-spec:
     url:      http://module-build.sourceforge.net/META-spec-v1.4.html
     version:  1.4
